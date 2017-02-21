@@ -20,6 +20,10 @@ class Column_MapperPlugin(plugins.SingletonPlugin):
                     controller='ckanext.column_mapper.controller:CMController',
                     action='home')
 
+        map.connect('home_page', '/dataset/column-mapper/update/{id}',
+                    controller='ckanext.column_mapper.controller:CMController',
+                    action='update_mapping')
+
         return map
 
     def after_map(self, map):
@@ -33,6 +37,10 @@ class Column_MapperPlugin(plugins.SingletonPlugin):
         map.connect('home_page', '/dataset/column-mapper/{id}',
                     controller='ckanext.column_mapper.controller:CMController',
                     action='home')
+
+        map.connect('home_page', '/dataset/column-mapper/update/{id}',
+                    controller='ckanext.column_mapper.controller:CMController',
+                    action='update_mapping')
         return map
 
     # IConfigurer

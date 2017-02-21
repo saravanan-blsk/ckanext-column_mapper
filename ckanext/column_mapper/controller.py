@@ -38,8 +38,26 @@ class CMController(BaseController):
                    'auth_user_obj': c.userobj, 'use_cache': False}
 
         # Retrieving resource data
-        data_dict_dict = {'resource_id': id+'_mapping'}
-        pkg_data_dictionary = get_action('datastore_search')(context, data_dict_dict)
+        resource_id_dict = {'resource_id': id+'_mapping'}
+        pkg_data_dictionary = get_action('datastore_search')(context, resource_id_dict)
         c.pkg_data_dictionary = pkg_data_dictionary['records']
+
+        # Setting Form action URL
+        c.link = str("/dataset/column-mapper/update/" + id)
+
+        return p.toolkit.render("form/edit_mapping.html")
+
+    def update_mapping(self, id, data=None, errors=None):
+        """Update mapping table."""
+
+        context = {'model': model, 'session': model.Session,
+                   'user': c.user or c.author, 'auth_user_obj': c.userobj}
+
+        print '-------------------------------------------------------------------------'
+        print dir(request.copy_body)
+        print '-------------------------------------------------------------------------'
+
+
+        #TODO: Remove the counter from fields in edit_mapping.html file and get the request as a list.
 
         return p.toolkit.render("form/edit_mapping.html")
