@@ -16,7 +16,7 @@ class Column_MapperPlugin(plugins.SingletonPlugin):
         :param map: Routes map object
         :returns: Modified version of the map object
         """
-        map.connect('home_page', '/dataset/column-mapper/',
+        map.connect('home_page', '/dataset/column-mapper/{id}',
                     controller='ckanext.column_mapper.controller:CMController',
                     action='home')
 
@@ -30,7 +30,7 @@ class Column_MapperPlugin(plugins.SingletonPlugin):
         :param map: Routes map object
         :returns: Modified version of the map object
         """
-        map.connect('home_page', '/dataset/column-mapper/',
+        map.connect('home_page', '/dataset/column-mapper/{id}',
                     controller='ckanext.column_mapper.controller:CMController',
                     action='home')
         return map
