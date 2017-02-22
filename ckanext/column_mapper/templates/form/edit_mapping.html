@@ -15,8 +15,8 @@
         <div class="span3">Format</div>
 </div>
 
-  {%if c.pkg_data_dictionary%}
-	  {% set data_dict = c.pkg_data_dictionary %}
+  {%if c.pkg_data%}
+	  {% set data_dict = c.pkg_data %}
 	  {% set data_dict = data_dict + [[][],[],[],[],[],[]]%}
   {%else%}
 	{%set data_dict = [[],[],[],[],[],[],[],[],[],[],[],[]]%}
@@ -32,10 +32,10 @@
     <div class="control-group control-custom" style="margin:1px;">
     <div class="row-fluid">
 
-     <div class="span3"><input id="field-{{ index }}" type="text" name="field_{{ index }}" value="{{current_data_dict['original_name']}}" style="width:90%" /></div>
-      <div class="span3"><input id="title-{{ index }}" type="text" name="title_{{ index }}" value="{{current_data_dict['mapped_name']}}" style="width:90%" /></div>
+     <div class="span3"><input id="original_name-{{ index }}" type="text" name="original_name_{{ index }}" value="{{current_data_dict['original_name']}}" style="width:90%" /></div>
+      <div class="span3"><input id="mapped_name-{{ index }}" type="text" name="mapped_name_{{ index }}" value="{{current_data_dict['mapped_name']}}" style="width:90%" /></div>
       <div class="span3">
-	<select class="span20" name="format_{{index}}">
+	<select class="span20" name="column_type_{{index}}">
 		<option value=""></option>
 			<option value="timestamp" {% if current_data_dict['column_type'] == "timestamp" %} selected {% endif %}>timestamp</option>
             <option value="numeric" {% if current_data_dict['column_type'] == "numeric" %} selected {% endif %}>numeric</option>
@@ -56,7 +56,7 @@
 
 {% block data_dict_buttons %}
 {% if c.pkg %}
-{% snippet 'form/form_cancel_button.html', extras=data.extras, errors=errors, pkg_name=pkg_name, limit=(c.pkg_data_dictionary|length)+1 %}
+{% snippet 'form/form_cancel_button.html', extras=data.extras, errors=errors, pkg_name=pkg_name, limit=(c.pkg_data|length)+1 %}
 {% else %}
 {% snippet 'form/form_save_button.html', extras=data.extras, errors=errors, limit=3 %}
 {%endif%}
