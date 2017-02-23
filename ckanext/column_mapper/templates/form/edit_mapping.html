@@ -45,11 +45,7 @@
               {% endfor %}
 
             {% block data_dict_buttons %}
-            {% if c.pkg %}
-            {% snippet 'form/form_cancel_button.html', extras=data.extras, errors=errors, pkg_name=pkg_name, limit=(c.pkg_data|length)+1 %}
-            {% else %}
             {% snippet 'form/form_save_button.html', extras=data.extras, errors=errors, limit=3 %}
-            {%endif%}
             {% endblock %}
 
             {%else%}
