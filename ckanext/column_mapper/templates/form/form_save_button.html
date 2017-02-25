@@ -1,4 +1,8 @@
 <div class="form-actions">
+    {% block delete_button %}
+        <a class="btn btn-danger pull-left" href="{% url_for controller='ckanext.column_mapper.controller:CMController', action='resource_mapping_delete', resource_id=c.resource.id, id=c.pkg_dict.id %}" data-module="confirm-action" data-module-i18n="{{ locale }}">{% block delete_button_text %}{{ _('Delete') }}{% endblock %}</a>
+    {% endblock %}
+
     {% block save_button %}
         <button class="btn btn-primary" type="submit" value="go-add-dict">{% block save_button_text %}{{ _('Update') }}{% endblock %}</button>
     {% endblock %}

@@ -26,6 +26,11 @@ class Column_MapperPlugin(plugins.SingletonPlugin):
                     action='resource_mapping_update',
                     ckan_icon='table')
 
+        map.connect('resource_mapping_delete', '/dataset/{id}/resource/{resource_id}/mapping/delete',
+                    controller='ckanext.column_mapper.controller:CMController',
+                    action='resource_mapping_delete',
+                    ckan_icon='delete')
+
         return map
 
     def after_map(self, map):
@@ -45,6 +50,11 @@ class Column_MapperPlugin(plugins.SingletonPlugin):
                     controller='ckanext.column_mapper.controller:CMController',
                     action='resource_mapping_update',
                     ckan_icon='table')
+
+        map.connect('resource_mapping_delete', '/dataset/{id}/resource/{resource_id}/mapping/delete',
+                    controller='ckanext.column_mapper.controller:CMController',
+                    action='resource_mapping_delete',
+                    ckan_icon='delete')
 
         return map
 

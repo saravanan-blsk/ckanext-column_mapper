@@ -5,7 +5,7 @@ import ckan.lib.render
 import ckan.logic as logic
 import ckan.model as model
 import ckan.plugins as p
-from ckan.common import request, c
+from ckan.common import request, c, _
 from ckan.lib.base import BaseController
 
 render = base.render
@@ -68,10 +68,48 @@ class CMController(BaseController):
         context = {'model': model, 'session': model.Session,
                    'user': c.user or c.author, 'auth_user_obj': c.userobj}
 
-        self.upsert_mapping_data(resource_id, request, context)
+        try:
+            self.upsert_mapping_data(resource_id, request, context)
+        except Exception, e:
+            abort(500, _('Failed to update Column mapping - %s') % str(e))
+
+        h.flash_notice(_('Mapping has been updated.'))
 
         redirect(h.url_for(controller='ckanext.datapusher.plugin:ResourceDataController',
                            action='resource_data', id=id, resource_id=resource_id))
+
+    def resource_mapping_delete(self, id, resource_id):
+        """Delete mapping table."""
+
+        if 'cancel' in request.params:
+            h.redirect_to(controller='ckanext.column_mapper.controller:CMController',
+                          action='resource_mapping',
+                          resource_id=resource_id, id=id)
+
+        context = {'model': model, 'session': model.Session,
+                   'user': c.user or c.author, 'auth_user_obj': c.userobj}
+
+        try:
+            check_access('package_delete', context, {'id': id})
+        except NotAuthorized:
+            abort(403, _('Unauthorized to delete package %s') % '')
+
+        try:
+            if request.method == 'POST':
+                mapping_id = resource_id + '_mapping'
+                get_action('datastore_delete')(context, {'resource_id': mapping_id, 'force': True})
+                h.flash_notice(_('Mapping has been deleted.'))
+                h.redirect_to(controller='ckanext.datapusher.plugin:ResourceDataController',
+                              action='resource_data', id=id, resource_id=resource_id)
+            c.resource_dict = get_action('resource_show')(
+                context, {'id': resource_id})
+            c.pkg_id = id
+        except NotAuthorized:
+            abort(403, _('Unauthorized to delete column mapping %s') % '')
+        except NotFound:
+            abort(404, _('Column Mapping not found for resource'))
+        return render('package/confirm_delete_resource_mapping.html',
+                      {'dataset_type': self._get_package_type(id)})
 
     def upsert_mapping_data(self, id, request, context):
         """
@@ -102,3 +140,13 @@ class CMController(BaseController):
                 loop_controller = False
 
             counter += 1
+
+    def _get_package_type(self, id):
+        """
+        Given the id of a package this method will return the type of the
+        package, or 'dataset' if no type is currently set
+        """
+        pkg = model.Package.get(id)
+        if pkg:
+            return pkg.type or 'dataset'
+        return None
