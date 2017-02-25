@@ -1,8 +1,5 @@
 <div class="form-actions">
-   {#{% block previous_button %}
-        <button class="btn" name="save" value="go-dataset" type="submit">{{ _('Previous') }}</button>
-      {% endblock %}#}
- {% block save_button %}
-        <button class="btn btn-primary" type="submit" name="save" value="go-add-dict">{% block save_button_text %}{{ _('Update') }}{% endblock %}</button>
-      {% endblock %}
+    {% block save_button %}
+        <button class="btn btn-primary" type="submit" value="go-add-dict">{% block save_button_text %}{{ _('Update') }}{% endblock %}</button>
+    {% endblock %}
 </div>

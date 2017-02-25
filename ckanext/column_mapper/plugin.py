@@ -4,7 +4,7 @@ import ckan.plugins.toolkit as toolkit
 
 class Column_MapperPlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.IConfigurer)
-    plugins.implements(plugins.IRoutes)
+    plugins.implements(plugins.IRoutes, inherit=True)
 
     # IRoutes
 
@@ -16,13 +16,15 @@ class Column_MapperPlugin(plugins.SingletonPlugin):
         :param map: Routes map object
         :returns: Modified version of the map object
         """
-        map.connect('home_page', '/dataset/column-mapper/{id}',
+        map.connect('resource_mapping', '/dataset/{id}/resource/{resource_id}/mapping',
                     controller='ckanext.column_mapper.controller:CMController',
-                    action='home')
+                    action='resource_mapping',
+                    ckan_icon='table')
 
-        map.connect('home_page', '/dataset/column-mapper/update/{id}',
+        map.connect('resource_mapping_update', '/dataset/{id}/resource/{resource_id}/mapping/update',
                     controller='ckanext.column_mapper.controller:CMController',
-                    action='update_mapping')
+                    action='resource_mapping_update',
+                    ckan_icon='table')
 
         return map
 
@@ -34,13 +36,16 @@ class Column_MapperPlugin(plugins.SingletonPlugin):
         :param map: Routes map object
         :returns: Modified version of the map object
         """
-        map.connect('home_page', '/dataset/column-mapper/{id}',
+        map.connect('resource_mapping', '/dataset/{id}/resource/{resource_id}/mapping',
                     controller='ckanext.column_mapper.controller:CMController',
-                    action='home')
+                    action='resource_mapping',
+                    ckan_icon='table')
 
-        map.connect('home_page', '/dataset/column-mapper/update/{id}',
+        map.connect('resource_mapping_update', '/dataset/{id}/resource/{resource_id}/mapping/update',
                     controller='ckanext.column_mapper.controller:CMController',
-                    action='update_mapping')
+                    action='resource_mapping_update',
+                    ckan_icon='table')
+
         return map
 
     # IConfigurer

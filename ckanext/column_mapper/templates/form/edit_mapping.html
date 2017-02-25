@@ -1,60 +1,66 @@
-{% extends "page.html" %}
 {% set data = data or {} %}
 {% set errors = errors or {} %}
 
 {% set action = form_action or h.url_for(c.link) %}
-{% block primary_content %}
 
 <form id="resource-edit" class="dataset-form dataset-resource-form form-horizontal" method="post" action="{{ action }}" data-module="basic-form resource-form" enctype="multipart/form-data">
     <p>
-        <div data-module="custom-fields">
+    <div data-module="custom-fields">
 
-          {%if c.pkg_data%}
-              {% set data_dict = c.pkg_data %}
-              {% set data_dict = data_dict%}
-            <div class="row-fluid" style="text-align:center;font-weight:bold;">
-                <div class="span3">Original Name</div>
-                <div class="span3">Truncated Name</div>
-                <div class="span3">Format</div>
-            </div>
-
-              {% for extra in data_dict %}
-                {% set index = loop.index0 + (extras|count) %}
-                {% if data_dict[index] %}
-                {% set current_data_dict = data_dict[index] %}
-                {% else %}
-                {% set current_data_dict = {'original_name' :'','mapped_name' :'', 'column_type': ''} %}
-                {%endif%}
-
-                <div class="control-group control-custom" style="margin:1px;">
-                    <div class="row-fluid">
-
-                     <div class="span3"><input id="original_name-{{ index }}" type="text" name="original_name_{{ index }}" value="{{current_data_dict['original_name']}}" style="width:90%" /></div>
-                     <div class="span3"><input id="mapped_name-{{ index }}" type="text" name="mapped_name_{{ index }}" value="{{current_data_dict['mapped_name']}}" style="width:90%" /></div>
-                     <div class="span3">
-                        <select class="span20" name="column_type_{{index}}">
-                            <option value=""></option>
-                            <option value="timestamp" {% if current_data_dict['column_type'] == "timestamp" %} selected {% endif %}>timestamp</option>
-                            <option value="numeric" {% if current_data_dict['column_type'] == "numeric" %} selected {% endif %}>numeric</option>
-                            <option value="text" {% if current_data_dict['column_type'] == "text" %} selected {% endif %}>text</option>
-                        </select>
-                     </div>
-                    <div class=""><input id="id-{{ index }}" type="hidden" name="id_{{ index }}" value="{{current_data_dict['id']}}" /></div>
-                    </div>
-                </div>
-              {% endfor %}
-
-            {% block data_dict_buttons %}
-            {% snippet 'form/form_save_button.html', extras=data.extras, errors=errors, limit=3 %}
-            {% endblock %}
-
-            {%else%}
-                <b>No mapping table found!</b>
-
-          {%endif%}
-
+        {%if c.pkg_data%}
+        {% set data_dict = c.pkg_data %}
+        <div class="row-fluid" style="text-align:center;font-weight:bold;">
+            <div class="span4">Original Name</div>
+            <div class="span4">Truncated Name</div>
+            <div class="span4">Format</div>
         </div>
+
+        {% for extra in data_dict %}
+        {% set index = loop.index0 + (extras|count) %}
+        {% if data_dict[index] %}
+        {% set current_data_dict = data_dict[index] %}
+        {% else %}
+        {% set current_data_dict = {'original_name' :'','mapped_name' :'', 'column_type': ''} %}
+        {%endif%}
+
+        <div class="control-group control-custom" style="margin:1px;">
+            <div class="row-fluid">
+
+                <div class="span4">
+                    <input id="original_name-{{ index }}" readonly type="text" name="original_name_{{ index }}" value="{{current_data_dict['original_name']}}" style="width:90%" />
+                </div>
+                <div class="span4">
+                    <input id="mapped_name-{{ index }}"
+                           pattern=".{1,60}"
+                           required
+                           title="Should be atleast 1 & atmost 60 characters long"
+                           type="text"
+                           name="mapped_name_{{ index }}"
+                           value="{{current_data_dict['mapped_name']}}"
+                           style="width:90%"
+                    />
+                </div>
+                <div class="span4">
+                    <select class="span20" name="column_type_{{index}}">
+                        <option value="timestamp" {% if current_data_dict['column_type'] == "timestamp" %} selected {% endif %}>timestamp</option>
+                        <option value="numeric" {% if current_data_dict['column_type'] == "numeric" %} selected {% endif %}>numeric</option>
+                        <option value="text" {% if current_data_dict['column_type'] == "text" %} selected {% endif %}>text</option>
+                    </select>
+                </div>
+                <div class=""><input id="id-{{ index }}" type="hidden" name="id_{{ index }}" value="{{current_data_dict['id']}}" /></div>
+            </div>
+        </div>
+        {% endfor %}
+
+        {% block data_dict_buttons %}
+        {% snippet 'form/form_save_button.html', extras=data.extras, errors=errors, limit=3 %}
+        {% endblock %}
+
+        {%else%}
+        <b>No mapping table found!</b>
+
+        {%endif%}
+
+    </div>
     </p>
 </form>
-
-{% endblock %}
